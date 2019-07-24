@@ -58,15 +58,9 @@ class Net(torch.nn.Module):
         self.block1 = ResidualBlock(64, 128)
         self.block2 = ResidualBlock(128, 256)
         self.block3 = ResidualBlock(256, 512)
-        self.block4 = ResidualBlock(512, 512)
-        #self.block5 = ResidualBlock(256, 256)
-        #self.block6 = ResidualBlock(256, 512)
-        #self.block7 = ResidualBlock(512, 512)
-                                    
-        
-        self.fc1 = torch.nn.Linear(64 * 512, 2048)
-        self.fc2 = torch.nn.Linear(2048, 10)
-        #self.fc3 = torch.nn.Linear(1024, 10)
+
+        self.fc1 = torch.nn.Linear(64 * 512, 1024)
+        self.fc2 = torch.nn.Linear(1024, 10)
         
     def forward(self, data):
         data.x = F.elu(self.bn1(self.conv1(data.x, data.edge_index, data.edge_attr)))
@@ -78,28 +72,10 @@ class Net(torch.nn.Module):
         data = max_pool(cluster, data, transform=T.Cartesian(cat=False))
         
         data = self.block2(data)
-        cluster = voxel_grid(data.pos, data.batch, size=[12,12])
+        cluster = voxel_grid(data.pos, data.batch, size=[20,20])
         data = max_pool(cluster, data, transform=T.Cartesian(cat=False))
         
         data = self.block3(data)
-        cluster = voxel_grid(data.pos, data.batch, size=[20,20])
-        data = max_pool(cluster, data, transform=T.Cartesian(cat=False))
-        
-        data = self.block4(data)
-        '''
-        cluster = voxel_grid(data.pos, data.batch, size=[16,16])
-        data = max_pool(cluster, data, transform=T.Cartesian(cat=False))
-        
-        data = self.block5(data)
-        cluster = voxel_grid(data.pos, data.batch, size=[20,20])
-        data = max_pool(cluster, data, transform=T.Cartesian(cat=False))
-        
-        data = self.block6(data)
-        cluster = voxel_grid(data.pos, data.batch, size=[24,24])
-        data = max_pool(cluster, data, transform=T.Cartesian(cat=False))       
-        
-        data = self.block7(data)
-        '''
         cluster = voxel_grid(data.pos, data.batch, size=[32,32])
         x = max_pool_x(cluster, data.x, data.batch, size=64)
         
@@ -174,20 +150,19 @@ model = Net().to(device)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
-train_batch_logger = Logger(os.path.join('./Results_res', 'train_batch.log'), ['epoch', 'batch', 'loss', 'acc'])
-test_batch_logger = Logger(os.path.join('./Results_res', 'test_batch.log'), ['batch', 'loss', 'acc'])
-acc_logger = Logger(os.path.join('./Results_res', 'acc.log'), ['epoch', 'acc'])
+train_batch_logger = Logger(os.path.join('./Results', 'train_batch.log'), ['epoch', 'batch', 'loss', 'acc'])
+test_batch_logger = Logger(os.path.join('./Results', 'test_batch.log'), ['batch', 'loss', 'acc'])
+acc_logger = Logger(os.path.join('./Results', 'acc.log'), ['epoch', 'acc'])
 
 
 
-#shutil.rmtree(osp.join('..',  'Data_R2/Traingraph/processed'))
-#shutil.rmtree(osp.join('..', 'Data_R2/Testgraph/processed'))
+#shutil.rmtree(osp.join('..',  'data/Traingraph/processed'))
+#shutil.rmtree(osp.join('..', 'data/Testgraph/processed'))
 for epoch in range(1, 150):
     
-    train_path = osp.join('..',  'Data_R2/Traingraph')
-    test_path = osp.join('..', 'Data_R2/Testgraph')
+    train_path = osp.join('..',  'data/Traingraph')
+    test_path = osp.join('..', 'data/Testgraph')
 
-    #train_data_aug = T.Compose([T.Cartesian(cat=False), T.RandomFlip(axis=0)])
     train_data_aug = T.Compose([T.Cartesian(cat=False), T.RandomFlip(axis=0, p=0.5), T.RandomScale([0.96,0.999]), T.RandomFlip(axis=1, p=0.5)])
     test_data_aug = T.Compose([T.Cartesian(cat=False), T.RandomFlip(axis=0, p=0.5), T.RandomScale([0.96,0.999]), T.RandomFlip(axis=1, p=0.5)])
 
@@ -195,8 +170,8 @@ for epoch in range(1, 150):
     test_dataset = MyOwnDataset(test_path, transform=test_data_aug)
 
     
-    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-    test_loader = DataLoader(test_dataset, batch_size=64)
+    train_loader = DataLoader(train_dataset, batch_size=3, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=3)
     
     train(epoch, train_batch_logger, train_loader)
     test_acc = test(test_batch_logger, test_loader)
@@ -204,11 +179,11 @@ for epoch in range(1, 150):
     print('Epoch: {:02d}, Test: {:.4f}'.format(epoch, test_acc))
     acc_logger.log({'epoch': epoch, 'acc': test_acc})
     
-    torch.save(model, './runs_model_res/model.pkl')
+    torch.save(model, './runs_model/model.pkl')
     
     
-    shutil.rmtree(osp.join('..',  'Data_R2/Traingraph/processed'))
-    #shutil.rmtree(osp.join('..', 'Data_R2/Testgraph/processed'))
+    shutil.rmtree(osp.join('..',  'data/Traingraph/processed'))
+    #shutil.rmtree(osp.join('..', 'data/Testgraph/processed'))
 
     
     
