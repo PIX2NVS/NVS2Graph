@@ -28,6 +28,7 @@ def normalized_cut_2d(edge_index, pos):
     return normalized_cut(edge_index, edge_attr, num_nodes=pos.size(0))
 
 
+
 class Net(torch.nn.Module):
     def __init__(self):
         super(Net, self).__init__()
@@ -39,130 +40,37 @@ class Net(torch.nn.Module):
         self.bn3 = torch.nn.BatchNorm1d(256)
         self.conv4 = SplineConv(256, 512, dim=2, kernel_size=5)
         self.bn4 = torch.nn.BatchNorm1d(512)
-        self.conv5 = SplineConv(512, 512, dim=2, kernel_size=5)
-        self.bn5 = torch.nn.BatchNorm1d(512)
-        self.fc1 = torch.nn.Linear(64 * 512, 1024)
-        self.fc2 = torch.nn.Linear(1024, 512)
-        self.fc3 = torch.nn.Linear(512, 101)
+        self.fc1 = torch.nn.Linear(32 * 512, 1024)
+        self.fc2 = torch.nn.Linear(1024, 10)
 
     def forward(self, data):
-        print('====Ori=====')
-        print(data.x.shape)
-        print(data.edge_index.shape)
-        print(data.batch.shape)
         data.x = F.elu(self.conv1(data.x, data.edge_index, data.edge_attr))
         data.x = self.bn1(data.x)
-        cluster = voxel_grid(data.pos, data.batch, size=[2,2])
-        data = max_pool(cluster, data, transform=T.Cartesian(cat=False))
-
-        print('====Conv1=====')
-        print(data.x.shape)
-        print(data.edge_index.shape)
-        print(data.batch.shape)
-        
-        data.x = F.elu(self.conv2(data.x, data.edge_index, data.edge_attr))
-        data.x = self.bn2(data.x)
         cluster = voxel_grid(data.pos, data.batch, size=[4,4])
         data = max_pool(cluster, data, transform=T.Cartesian(cat=False))
-        
-        print('====Conv2=====')
-        print(data.x.shape)
-        print(data.edge_index.shape)
-        print(data.batch.shape)
-        
+
+        data.x = F.elu(self.conv2(data.x, data.edge_index, data.edge_attr))
+        data.x = self.bn2(data.x)
+        cluster = voxel_grid(data.pos, data.batch, size=[6,6])
+        data = max_pool(cluster, data, transform=T.Cartesian(cat=False))
         
         data.x = F.elu(self.conv3(data.x, data.edge_index, data.edge_attr))
         data.x = self.bn3(data.x)
-        cluster = voxel_grid(data.pos, data.batch, size=[8,8])
+        cluster = voxel_grid(data.pos, data.batch, size=[20,20])
         data = max_pool(cluster, data, transform=T.Cartesian(cat=False))
-        
-        print('====Conv3=====')
-        print(data.x.shape)
-        print(data.edge_index.shape)
-        print(data.batch.shape)
-        
+
         data.x = F.elu(self.conv4(data.x, data.edge_index, data.edge_attr))
         data.x = self.bn4(data.x)
-        cluster = voxel_grid(data.pos, data.batch, size=[16,16])
-        data = max_pool(cluster, data, transform=T.Cartesian(cat=False))
-        
-        print('====Conv4=====')
-        print(data.x.shape)
-        print(data.edge_index.shape)
-        print(data.batch.shape)
-        
-        data.x = F.elu(self.conv5(data.x, data.edge_index, data.edge_attr))
-        data.x = self.bn5(data.x)
         cluster = voxel_grid(data.pos, data.batch, size=[32,32])
-        x = max_pool_x(cluster, data.x, data.batch, size=64)
-        
-        print('====Conv5=====')
-        print(data.x.shape)
-        print(data.edge_index.shape)
-        print(data.batch.shape)
-
-        x = x.view(-1, self.fc1.weight.size(1))
-        x = F.elu(self.fc1(x))
-        x = F.dropout(x, training=self.training)
-        x = self.fc2(x)
-        x = F.dropout(x, training=self.training)
-        x = self.fc3(x)
-        return F.log_softmax(x, dim=1)
-
-
-
-'''
-class Net(torch.nn.Module):
-    def __init__(self):
-        super(Net, self).__init__()
-        self.conv1 = SplineConv(1, 64, dim=2, kernel_size=5)
-        self.bn1 = torch.nn.BatchNorm1d(64)
-        self.conv2 = SplineConv(64, 128, dim=2, kernel_size=5)
-        self.bn2 = torch.nn.BatchNorm1d(128)
-        self.conv3 = SplineConv(128, 128, dim=2, kernel_size=5)
-        self.bn3 = torch.nn.BatchNorm1d(128)
-        self.conv4 = SplineConv(128, 256, dim=2, kernel_size=5)
-        self.bn4 = torch.nn.BatchNorm1d(256)
-        self.conv5 = SplineConv(256, 256, dim=2, kernel_size=5)
-        self.bn5 = torch.nn.BatchNorm1d(256)
-        self.fc1 = torch.nn.Linear(32 * 256, 2048)
-        self.fc2 = torch.nn.Linear(2048, 1024)
-        self.fc3 = torch.nn.Linear(1024, 101)
-
-    def forward(self, data):
-        data.x = F.elu(self.conv1(data.x, data.edge_index, data.edge_attr))
-        data.x = self.bn1(data.x)
-        cluster = voxel_grid(data.pos, data.batch, size=[4,4])
-        data = max_pool(cluster, data, transform=T.Cartesian(cat=False))
-
-        data.x = F.elu(self.conv2(data.x, data.edge_index, data.edge_attr))
-        data.x = self.bn2(data.x)
-        cluster = voxel_grid(data.pos, data.batch, size=[8,6])
-        data = max_pool(cluster, data, transform=T.Cartesian(cat=False))
-        
-        data.x = F.elu(self.conv3(data.x, data.edge_index, data.edge_attr))
-        data.x = self.bn3(data.x)
-        cluster = voxel_grid(data.pos, data.batch, size=[16,12])
-        data = max_pool(cluster, data, transform=T.Cartesian(cat=False))
-
-        data.x = F.elu(self.conv4(data.x, data.edge_index, data.edge_attr))
-        data.x = self.bn4(data.x)
-        cluster = voxel_grid(data.pos, data.batch, size=[30,23])
-        data = max_pool(cluster, data, transform=T.Cartesian(cat=False))
-        
-        data.x = F.elu(self.conv5(data.x, data.edge_index, data.edge_attr))
-        data.x = self.bn5(data.x)
-        cluster = voxel_grid(data.pos, data.batch, size=[60,45])
         x = max_pool_x(cluster, data.x, data.batch, size=32)
 
         x = x.view(-1, self.fc1.weight.size(1))
         x = F.elu(self.fc1(x))
         x = F.dropout(x, training=self.training)
         x = self.fc2(x)
-        x = F.dropout(x, training=self.training)
-        x = self.fc3(x)
+        
         return F.log_softmax(x, dim=1)
-'''
+
 
 def train(epoch, batch_logger, train_loader):
     model.train()
@@ -178,7 +86,7 @@ def train(epoch, batch_logger, train_loader):
     for i, data in enumerate(train_loader):
         with autograd.detect_anomaly():
             data = data.to(device)
-            #print(data.y)
+            print(data.y)
             optimizer.zero_grad()
             end_point = model(data)
             
@@ -225,8 +133,8 @@ model = Net().to(device)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
-train_batch_logger = Logger(os.path.join('./Results_1', 'train_batch.log'), ['epoch', 'batch', 'loss', 'acc'])
-test_batch_logger = Logger(os.path.join('./Results_1', 'test_batch.log'), ['batch', 'loss', 'acc'])
+train_batch_logger = Logger(os.path.join('./Results', 'train_batch.log'), ['epoch', 'batch', 'loss', 'acc'])
+test_batch_logger = Logger(os.path.join('./Results', 'test_batch.log'), ['batch', 'loss', 'acc'])
 
 
 
@@ -245,8 +153,8 @@ for epoch in range(1, 150):
     test_dataset = MyOwnDataset(test_path, transform=test_data_aug)
 
     
-    train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
-    test_loader = DataLoader(test_dataset, batch_size=1)
+    train_loader = DataLoader(train_dataset, batch_size=3, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=3)
     
     train(epoch, train_batch_logger, train_loader)
     test_acc = test(test_batch_logger, test_loader)
