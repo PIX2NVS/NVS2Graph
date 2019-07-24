@@ -37,7 +37,7 @@ title = {Graph-based Object Classification for Neuromorphic Vision Sensing},
 
 booktitle = {The IEEE International Conference on Computer Vision (ICCV)},
 
-month = {Oct},
+month = {Oct.},
 
 year = {2019}
 
