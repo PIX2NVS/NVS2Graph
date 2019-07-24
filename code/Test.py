@@ -40,7 +40,7 @@ class Net(torch.nn.Module):
         self.bn3 = torch.nn.BatchNorm1d(256)
         self.conv4 = SplineConv(256, 512, dim=2, kernel_size=5)
         self.bn4 = torch.nn.BatchNorm1d(512)
-        self.fc1 = torch.nn.Linear(32 * 512, 1024)
+        self.fc1 = torch.nn.Linear(64 * 512, 1024)
         self.fc2 = torch.nn.Linear(1024, 10)
 
     def forward(self, data):
@@ -62,7 +62,7 @@ class Net(torch.nn.Module):
         data.x = F.elu(self.conv4(data.x, data.edge_index, data.edge_attr))
         data.x = self.bn4(data.x)
         cluster = voxel_grid(data.pos, data.batch, size=[32,32])
-        x = max_pool_x(cluster, data.x, data.batch, size=32)
+        x = max_pool_x(cluster, data.x, data.batch, size=64)
 
         x = x.view(-1, self.fc1.weight.size(1))
         x = F.elu(self.fc1(x))
