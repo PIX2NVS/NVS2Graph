@@ -30,11 +30,17 @@ ASL-DVS contains 24 classes correspond to 24 letters (A-Y, excluding J) from the
 Please cite our paper if you use this code or dataset in your own work. 
 
 @InProceedings{Bi2019Graph,
+
 author = {Yin Bi, Aaron Chadha, Alhabib Abbas, Eirina Bourtsoulatze and Yiannis Andreopoulos},
+
 title = {Graph-based Object Classification for Neuromorphic Vision Sensing},
+
 booktitle = {The IEEE International Conference on Computer Vision (ICCV)},
+
 month = {Oct},
+
 year = {2019}
+
 }
 
 ## Contact 
