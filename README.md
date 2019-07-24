@@ -20,4 +20,4 @@ ASL-DVS contains 24 classes correspond to 24 letters (A-Y, excluding J) from the
      
 ### Running examples:
     cd code
-    python Test.py   # runing file for G-CNN 
+    python Test.py   # running file for G-CNN 
