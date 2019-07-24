@@ -147,16 +147,15 @@ test_batch_logger = Logger(os.path.join('./Results_GCN', 'test_batch.log'), ['ba
 acc_logger = Logger(os.path.join('./Results_GCN', 'acc.log'), ['epoch', 'acc'])
 
 
-#shutil.rmtree(osp.join('..',  'Data_R2/Traingraph/processed'))
-#shutil.rmtree(osp.join('..', 'Data_R2/Testgraph/processed'))
+#shutil.rmtree(osp.join('..',  'data/Traingraph/processed'))
+#shutil.rmtree(osp.join('..', 'data/Testgraph/processed'))
 for epoch in range(1, 180):
     
-    train_path = osp.join('..',  'Data_R2/Traingraph')
-    test_path = osp.join('..', 'Data_R2/Testgraph')
+    train_path = osp.join('..',  'data/Traingraph')
+    test_path = osp.join('..', 'data/Testgraph')
 
-    #train_data_aug = T.Compose([T.Cartesian(cat=False), T.RandomFlip(axis=0)])
-    train_data_aug = T.Compose([T.Cartesian(cat=False), T.RandomFlip(axis=0, p=0.3), T.RandomScale([0.96,0.999]) ])
-    test_data_aug = T.Compose([T.Cartesian(cat=False), T.RandomFlip(axis=0, p=0.3), T.RandomScale([0.96,0.999])])
+    train_data_aug = T.Compose([T.Cartesian(cat=False), T.RandomFlip(axis=0, p=0.3), T.RandomScale([0.95,0.999]) ])
+    test_data_aug = T.Compose([T.Cartesian(cat=False), T.RandomFlip(axis=0, p=0.3), T.RandomScale([0.95,0.999])])
 
     train_dataset = MyOwnDataset(train_path, transform=train_data_aug)      #### transform=T.Cartesian()
     test_dataset = MyOwnDataset(test_path, transform=test_data_aug)
@@ -170,12 +169,12 @@ for epoch in range(1, 180):
     
     print('Epoch: {:02d}, Test: {:.4f}'.format(epoch, test_acc))
     
-    torch.save(model, './runs_model_GCN/model.pkl')
+    torch.save(model, './runs_model/model.pkl')
     acc_logger.log({'epoch': epoch, 'acc': test_acc})
     
     
-    shutil.rmtree(osp.join('..',  'Data_R2/Traingraph/processed'))
-    #shutil.rmtree(osp.join('..', 'Data_R2/Testgraph/processed'))
+    shutil.rmtree(osp.join('..',  'data/Traingraph/processed'))
+    #shutil.rmtree(osp.join('..', 'data/Testgraph/processed'))
 
     
     
