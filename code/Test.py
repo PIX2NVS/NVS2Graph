@@ -128,7 +128,7 @@ def test(batch_logger, test_loader):
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = Net().to(device)
 
-#model = torch.load('./runs_model_1/model.pkl')
+#model = torch.load('./runs_model/model.pkl')
 #model.to(device)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
@@ -138,16 +138,15 @@ test_batch_logger = Logger(os.path.join('./Results', 'test_batch.log'), ['batch'
 
 
 
-#shutil.rmtree(osp.join('..',  'Data_R2/Traingraph/processed'))
-#shutil.rmtree(osp.join('..', 'Data_R2/Testgraph/processed'))
+#shutil.rmtree(osp.join('..',  'data/Traingraph/processed'))
+#shutil.rmtree(osp.join('..', 'data/Testgraph/processed'))
 for epoch in range(1, 150):
     
-    train_path = osp.join('..',  'Data_R2/Traingraph')
-    test_path = osp.join('..', 'Data_R2/Testgraph')
+    train_path = osp.join('..',  'data/Traingraph')
+    test_path = osp.join('..', 'data/Testgraph')
 
-    #train_data_aug = T.Compose([T.Cartesian(cat=False), T.RandomFlip(axis=0)])
-    train_data_aug = T.Compose([T.Cartesian(cat=False), T.RandomFlip(axis=0, p=0.3), T.RandomScale([0.93,0.999]), T.RandomFlip(axis=1, p=0.2)])
-    test_data_aug = T.Compose([T.Cartesian(cat=False), T.RandomFlip(axis=0, p=0.3), T.RandomScale([0.93,0.999]), T.RandomFlip(axis=1, p=0.2)])
+    train_data_aug = T.Compose([T.Cartesian(cat=False), T.RandomFlip(axis=0, p=0.3), T.RandomScale([0.95,0.999]), T.RandomFlip(axis=1, p=0.2)])
+    test_data_aug = T.Compose([T.Cartesian(cat=False), T.RandomFlip(axis=0, p=0.3), T.RandomScale([0.95,0.999]), T.RandomFlip(axis=1, p=0.2)])
 
     train_dataset = MyOwnDataset(train_path, transform=train_data_aug)      #### transform=T.Cartesian()
     test_dataset = MyOwnDataset(test_path, transform=test_data_aug)
@@ -161,11 +160,11 @@ for epoch in range(1, 150):
     
     print('Epoch: {:02d}, Test: {:.4f}'.format(epoch, test_acc))
     
-    torch.save(model, './runs_model_1/model.pkl')
+    torch.save(model, './runs_model/model.pkl')
     
     
-    shutil.rmtree(osp.join('..',  'Data_R2/Traingraph/processed'))
-    #shutil.rmtree(osp.join('..', 'Data_R2/Testgraph/processed'))
+    shutil.rmtree(osp.join('..',  'data/Traingraph/processed'))
+    #shutil.rmtree(osp.join('..', 'data/Testgraph/processed'))
 
     
     
