@@ -84,11 +84,11 @@ class Net(torch.nn.Module):
 def train(epoch, batch_logger, train_loader):
     model.train()
 
-    if epoch == 120:
+    if epoch == 60:
         for param_group in optimizer.param_groups:
             param_group['lr'] = 0.0001
 
-    if epoch == 150:
+    if epoch == 110:
         for param_group in optimizer.param_groups:
             param_group['lr'] = 0.00001
 
@@ -137,22 +137,22 @@ def test(batch_logger, test_loader):
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = Net().to(device)
 
-#model = torch.load('./runs_model_mo/model.pkl')
+#model = torch.load('./runs_model/model.pkl')
 #model.to(device)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
-train_batch_logger = Logger(os.path.join('./Results_mo', 'train_batch.log'), ['epoch', 'batch', 'loss', 'acc'])
-test_batch_logger = Logger(os.path.join('./Results_mo', 'test_batch.log'), ['batch', 'loss', 'acc'])
-acc_logger = Logger(os.path.join('./Results_mo', 'acc.log'), ['epoch', 'acc'])
+train_batch_logger = Logger(os.path.join('./Results', 'train_batch.log'), ['epoch', 'batch', 'loss', 'acc'])
+test_batch_logger = Logger(os.path.join('./Results', 'test_batch.log'), ['batch', 'loss', 'acc'])
+acc_logger = Logger(os.path.join('./Results', 'acc.log'), ['epoch', 'acc'])
 
 
-#shutil.rmtree(osp.join('..',  'Data_R2/Traingraph/processed'))
-#shutil.rmtree(osp.join('..', 'Data_R2/Testgraph/processed'))
+#shutil.rmtree(osp.join('..',  'data/Traingraph/processed'))
+#shutil.rmtree(osp.join('..', 'data/Testgraph/processed'))
 for epoch in range(1, 180):
     
-    train_path = osp.join('..',  'Data_R2/Traingraph')
-    test_path = osp.join('..', 'Data_R2/Testgraph')
+    train_path = osp.join('..',  'data/Traingraph')
+    test_path = osp.join('..', 'data/Testgraph')
 
     #train_data_aug = T.Compose([T.Cartesian(cat=False), T.RandomFlip(axis=0)])
     train_data_aug = T.Compose([T.Cartesian(cat=False), T.RandomFlip(axis=0, p=0.3), T.RandomScale([0.96,0.999]) ])
@@ -162,20 +162,20 @@ for epoch in range(1, 180):
     test_dataset = MyOwnDataset(test_path, transform=test_data_aug)
 
     
-    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-    test_loader = DataLoader(test_dataset, batch_size=64)
+    train_loader = DataLoader(train_dataset, batch_size=3, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=3)
     
     train(epoch, train_batch_logger, train_loader)
     test_acc = test(test_batch_logger, test_loader)
     
     print('Epoch: {:02d}, Test: {:.4f}'.format(epoch, test_acc))
     
-    torch.save(model, './runs_model_mo/model.pkl')
+    torch.save(model, './runs_model/model.pkl')
     acc_logger.log({'epoch': epoch, 'acc': test_acc})
     
     
-    shutil.rmtree(osp.join('..',  'Data_R2/Traingraph/processed'))
-    #shutil.rmtree(osp.join('..', 'Data_R2/Testgraph/processed'))
+    shutil.rmtree(osp.join('..',  'data/Traingraph/processed'))
+    #shutil.rmtree(osp.join('..', 'data/Testgraph/processed'))
 
     
     
