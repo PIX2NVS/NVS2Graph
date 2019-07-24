@@ -1,7 +1,7 @@
 # Graph-based Object Classification for Neuromorphic Vision Sensing
 
 ## Summary
-This is the implemtation code and proposed dataset(ASL-DVS) for the following papers:
+This is the implemtation code and proposed dataset(ASL-DVS) for the following paper:
 
 [1] Yin Bi, Aaron Chadha, Alhabib Abbas, Eirina Bourtsoulatze and Yiannis Andreopoulos, 'Graph-based Object Classification for Neuromorphic Vision Sensing', IEEE Conference on Computer Vision (ICCV), Oct.17 - Nov,2, 2019, Seoul, Korea
 
