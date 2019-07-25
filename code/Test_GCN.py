@@ -142,9 +142,9 @@ model = Net().to(device)
 
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
-train_batch_logger = Logger(os.path.join('./Results_GCN', 'train_batch.log'), ['epoch', 'batch', 'loss', 'acc'])
-test_batch_logger = Logger(os.path.join('./Results_GCN', 'test_batch.log'), ['batch', 'loss', 'acc'])
-acc_logger = Logger(os.path.join('./Results_GCN', 'acc.log'), ['epoch', 'acc'])
+train_batch_logger = Logger(os.path.join('./Results', 'train_batch.log'), ['epoch', 'batch', 'loss', 'acc'])
+test_batch_logger = Logger(os.path.join('./Results', 'test_batch.log'), ['batch', 'loss', 'acc'])
+acc_logger = Logger(os.path.join('./Results', 'acc.log'), ['epoch', 'acc'])
 
 
 #shutil.rmtree(osp.join('..',  'data/Traingraph/processed'))
