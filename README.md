@@ -20,7 +20,7 @@ ASL-DVS contains 24 classes correspond to 24 letters (A-Y, excluding J) from the
      Pytorch 
      pytorch_geometric
      
-### Preparation:
+### Preparations:
     Training graps are saved in './data/Traingraph/raw/' folder.
     Testing graphs are saved in './data/Testgraph/raw/' folder.
     Each sample should contains feature of nodes, edge, pseudo adresses and label.
@@ -28,6 +28,8 @@ ASL-DVS contains 24 classes correspond to 24 letters (A-Y, excluding J) from the
 ### Running examples:
     cd code
     python Test.py   # running file for G-CNN 
+    
+    The results can be found in the 'Results' folder.
 
 
 ## Cite
