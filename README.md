@@ -29,7 +29,7 @@ ASL-DVS contains 24 classes correspond to 24 letters (A-Y, excluding J) from the
     cd code
     python Test.py   # running file for G-CNN 
     
-    The results can be found in the 'Results' folder.
+    #The results can be found in the 'Results' folder.
 
 
 ## Cite
