@@ -16,7 +16,7 @@ from inputsdata import MyOwnDataset
 import torch_geometric.transforms as T
 from torch_geometric.data import DataLoader
 from torch_geometric.utils import normalized_cut
-from torch_geometric.nn import SplineConv, voxel_grid, max_pool, max_pool_x, graclus, global_mean_pool, NNConv
+from torch_geometric.nn import SplineConv, voxel_grid, max_pool, max_pool_x, graclus
 
 
 
