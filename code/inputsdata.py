@@ -57,7 +57,6 @@ class MyOwnDataset(Dataset):
             pos = torch.tensor(content['pseudo'])
 
             label_idx = torch.tensor(content['label'], dtype=torch.long)
-            #print(label_idx.shape)
                    
             data = Data(x=feature, edge_index=edge_index, pos=pos, y=label_idx.squeeze(0))
 
