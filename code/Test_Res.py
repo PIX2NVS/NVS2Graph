@@ -30,18 +30,23 @@ def normalized_cut_2d(edge_index, pos):
 class ResidualBlock(torch.nn.Module):
     def __init__(self, in_channel, out_channel):
         super(ResidualBlock, self).__init__()
-        self.left_conv1 = SplineConv(in_channel, out_channel, dim=2, kernel_size=4)
+        self.left_conv1 = SplineConv(in_channel, out_channel, dim=2, kernel_size=5)
         self.left_bn1 = torch.nn.BatchNorm1d(out_channel)
-
+        self.left_conv2 = SplineConv(out_channel, out_channel, dim=2, kernel_size=5)
+        self.left_bn2 = torch.nn.BatchNorm1d(out_channel)
+        
         self.shortcut_conv = SplineConv(in_channel, out_channel, dim=2, kernel_size=1)
         self.shortcut_bn = torch.nn.BatchNorm1d(out_channel)
-             
+        
+     
     def forward(self, data):
         
-        data.x = F.elu(self.left_bn1(self.left_conv1(data.x, data.edge_index, data.edge_attr)) + 
+        data.x = F.elu(self.left_bn2(self.left_conv2(F.elu(self.left_bn1(self.left_conv1(data.x, data.edge_index, data.edge_attr))),
+                                            data.edge_index, data.edge_attr)) + 
                        self.shortcut_bn(self.shortcut_conv(data.x, data.edge_index, data.edge_attr)))
         
         return data
+        
                     
 class Net(torch.nn.Module):
     def __init__(self):
