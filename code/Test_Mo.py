@@ -95,7 +95,6 @@ def train(epoch, batch_logger, train_loader):
     for i, data in enumerate(train_loader):
         with autograd.detect_anomaly():
             data = data.to(device)
-            #print(data.y)
             optimizer.zero_grad()
             end_point = model(data)
             
