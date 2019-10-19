@@ -9,12 +9,12 @@ MLA:
     
 BibTex:
     
-    @InProceedings{Bi2019Graph,
-    author = {Yin Bi, Aaron Chadha, Alhabib Abbas, Eirina Bourtsoulatze and Yiannis Andreopoulos},   
-    title = {Graph-based Object Classification for Neuromorphic Vision Sensing},
-    booktitle = {The IEEE International Conference on Computer Vision (ICCV)},
-    month = {Oct.},
-    year = {2019}
+    @inproceedings{bi2019graph,
+    title={Graph-based Object Classification for Neuromorphic Vision Sensing},
+    author={Bi, Y and Chadha, A and Abbas, A and and Bourtsoulatze, E andAndreopoulos, Y},
+    booktitle={2019 IEEE International Conference on Computer Vision (ICCV)},
+    year={2019},
+    organization={IEEE}
     }
 
 ## Dataset: ASL-DVS 
