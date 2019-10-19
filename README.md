@@ -11,7 +11,7 @@ BibTex:
     
     @inproceedings{bi2019graph,
     title={Graph-based Object Classification for Neuromorphic Vision Sensing},
-    author={Bi, Y and Chadha, A and Abbas, A and and Bourtsoulatze, E andAndreopoulos, Y},
+    author={Bi, Y and Chadha, A and Abbas, A and and Bourtsoulatze, E and Andreopoulos, Y},
     booktitle={2019 IEEE International Conference on Computer Vision (ICCV)},
     year={2019},
     organization={IEEE}
