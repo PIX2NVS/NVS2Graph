@@ -23,10 +23,7 @@ from torch_geometric.nn import voxel_grid, max_pool, max_pool_x, graclus, global
 
 
 transform = T.Cartesian(cat=False)
-def normalized_cut_2d(edge_index, pos):
-    row, col = edge_index
-    edge_attr = torch.norm(pos[row] - pos[col], p=2, dim=1)
-    return normalized_cut(edge_index, edge_attr, num_nodes=pos.size(0))
+
 
 
 class Net(torch.nn.Module):
