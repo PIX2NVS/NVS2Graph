@@ -36,7 +36,7 @@ Our goal is to represent the stream of spike events from neuromorphic vision sen
 ## Code Implementation
 ### Requirements:
      Python 2.7 
-     Pytorch 
+     Pytorch 1.0.1.post2
      pytorch_geometric 1.1.2
      
 ### Preparations:
