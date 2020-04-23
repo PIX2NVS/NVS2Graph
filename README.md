@@ -37,7 +37,7 @@ Our goal is to represent the stream of spike events from neuromorphic vision sen
 ### Requirements:
      Python 2.7 
      Pytorch 
-     pytorch_geometric
+     pytorch_geometric 1.1.2
      
 ### Preparations:
     Training graphs are saved in './data/Traingraph/raw/' folder.
